@@ -46,10 +46,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -128,40 +128,57 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RegistersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs">
-      <DependentUpon>RestaurantModel.tt</DependentUpon>
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Item.cs">
-      <DependentUpon>RestaurantModel.tt</DependentUpon>
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Order.cs">
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderDetail.cs">
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PaymentType.cs">
-      <DependentUpon>RestaurantModel.tt</DependentUpon>
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RestaurantModel.Context.cs">
+    <Compile Include="Models\Register.cs">
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RestaurantDBModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>RestaurantModel.Context.tt</DependentUpon>
+      <DependentUpon>RestaurantDBModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RestaurantModel.cs">
+    <Compile Include="Models\RestaurantDBModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>RestaurantModel.tt</DependentUpon>
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RestaurantModel.Designer.cs">
+    <Compile Include="Models\RestaurantDBModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>RestaurantModel.edmx</DependentUpon>
+      <DependentUpon>RestaurantDBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction.cs">
+      <DependentUpon>RestaurantDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CustomerRepository.cs" />
     <Compile Include="Repositories\ItemRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\PaymentTypeRepository.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\ItemViewModel.cs" />
+    <Compile Include="ViewModel\OrderDetailViewModel.cs" />
+    <Compile Include="ViewModel\OrderViewModel.cs" />
     <Compile Include="ViewModel\PaymentTypeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -173,24 +190,24 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\RestaurantModel.Context.tt">
+    <Content Include="Models\RestaurantDBModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RestaurantModel.Context.cs</LastGenOutput>
-      <DependentUpon>RestaurantModel.edmx</DependentUpon>
+      <DependentUpon>RestaurantDBModel.edmx</DependentUpon>
+      <LastGenOutput>RestaurantDBModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\RestaurantModel.tt">
+    <Content Include="Models\RestaurantDBModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>RestaurantModel.edmx</DependentUpon>
-      <LastGenOutput>RestaurantModel.cs</LastGenOutput>
+      <DependentUpon>RestaurantDBModel.edmx</DependentUpon>
+      <LastGenOutput>RestaurantDBModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\RestaurantModel.edmx">
+    <EntityDeploy Include="Models\RestaurantDBModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>RestaurantModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>RestaurantDBModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\RestaurantModel.edmx.diagram">
-      <DependentUpon>RestaurantModel.edmx</DependentUpon>
+    <Content Include="Models\RestaurantDBModel.edmx.diagram">
+      <DependentUpon>RestaurantDBModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -217,6 +234,15 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Admin\Register.cshtml" />
+    <Content Include="Views\Admin\login.cshtml" />
+    <Content Include="Views\Admin\Home_SuperAdmin.cshtml" />
+    <Content Include="Views\Registers\Create.cshtml" />
+    <Content Include="Views\Registers\Delete.cshtml" />
+    <Content Include="Views\Registers\Details.cshtml" />
+    <Content Include="Views\Registers\Edit.cshtml" />
+    <Content Include="Views\Registers\Index.cshtml" />
+    <Content Include="Views\Shared\partialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,11 +18,69 @@
             CalculateSubTotal();
         });
 
+        $("input[type=text]").keyup(function () {
+            CalculateBalance();
+        });
+
         $("#btnAddToList").click(function () {
             AddTotheItemList();
         });
 
+        $("#btnPayment").click(function () {
+            FinalPayment();
+        });
+
     });
+
+    function FinalPayment() {
+        var objOrderViewModel = {};
+        var ListOfOrderDetailViewModel = new Array();
+        //ListOfOrderDetailViewModel
+        objOrderViewModel.PaymentTypeId = $("#PaymentType").val();
+        objOrderViewModel.CustomerId = $("#Customer").val();
+        objOrderViewModel.FinalTotal = $("#txtFinalTotal").val();
+
+        $("#tblRestaurantItemList").find("tr:gt(0)").each(function () {
+            var OrderDetailViewModel = {};
+            OrderDetailViewModel.Total = parseFloat($(this).find("td:eq(5)").text());
+            OrderDetailViewModel.ItemId = parseFloat($(this).find("td:eq(0)").text());
+            OrderDetailViewModel.UnitPrice = parseFloat($(this).find("td:eq(2)").text());
+            OrderDetailViewModel.Quantity = parseFloat($(this).find("td:eq(3)").text());
+            OrderDetailViewModel.Discount = parseFloat($(this).find("td:eq(4)").text());
+            ListOfOrderDetailViewModel.push(OrderDetailViewModel);
+        });
+        objOrderViewModel.ListOfOrderDetailViewModel = ListOfOrderDetailViewModel;
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(objOrderViewModel),
+            url: '/Home/Index',
+            success: function (data) {
+                alert("Successfully updated !");
+            },
+            error: function () {
+                alert("There is some problem to adding the data");
+            }
+        })
+    }
+
+    function CalculateBalance() {
+        var FinalAmount = $("#txtPaymentTotal").val();
+        var PaymentAmount = $("#txtPaymentAmount").val();
+        var ReturnAmount = $("#txtReturnTotal").val();
+        var BalanceAmount = parseFloat(FinalAmount) - parseFloat(PaymentAmount) + parseFloat(ReturnAmount);
+        $("#txtBalance").val(parseFloat(BalanceAmount).toFixed(2));
+
+        if (parseFloat(BalanceAmount) == 0) {
+            $("#btnPayment").removeAttr("disabled");
+        }
+        else {
+            $("btnPayment").attr("disabled", "disabled");
+        }
+    }
 
     function RemoveItem(itemId) {
         $(itemId).closest('tr').remove();
@@ -66,6 +124,8 @@
         });
 
         $("#txtFinalTotal").val(parseFloat(FinalTotal).toFixed(2));
+        $("#txtPaymentTotal").val(parseFloat(FinalTotal).toFixed(2));
+        $("#txtBalance").val(parseFloat(FinalTotal).toFixed(2));
     }
 
     function ResetItem() {
@@ -106,6 +166,26 @@
 </script>
 
 <style>
+
+    .modal{
+        text-align:center;
+        padding:0!important;
+    }
+
+    .modal:before{
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align:middle;
+        margin-right: -4px;
+    }
+
+    .modal-dialog{
+        display:inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+
     fieldset{
         border: 1px solid #ddd !important;
         margin: 0;
@@ -128,193 +208,219 @@
         background-color: #ffffff;
     }
 </style>
+<body  style="background-color: palegoldenrod">
+    <div style="background-color: palegoldenrod">
 
+        <fieldset style="background-color:silver">
+            <legend style="background-color:#f4511e">
+                CUSTOMER DETAILS
+            </legend>
+            <div class="container">
+                <div class="row">
 
-<fieldset>
-    <legend>
-        RESTAURANT
-    </legend>
-    <div class="container">
-        <div class="row">
+                    @*            <div class="col-md-4">
+                            <div class="form-group">
+                                Customer :
+                                @Html.DropDownList("Customer", new SelectList(Model.Item1, "Value", "Text"),
+                                new { @class = "form-control" })
+                            </div>
+                        </div>*@
 
-            <div class="col-md-4">
-                <div class="form-group">
-                    Customer :
-                    @Html.DropDownList("Customer", new SelectList(Model.Item1, "Value", "Text"),
-                    new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Payment Type :
-                    @Html.DropDownList("PaymentType", new SelectList(Model.Item3, "Value", "Text"),
-                    new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Total :
-                     <input type="text" style="text-align:right" value="0.00" name="FinalTotal" readonly="readonly" id="txtFinalTotal" class="form-control"/>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</fieldset>
-
-<br/>
-
-<fieldset>
-    <legend>
-        RESTAURANT ITEMS
-    </legend>
-
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Item:
-                    @Html.DropDownList("Item", new SelectList(Model.Item2, "Value", "Text"),
-                    new { @class = "form-control" })
-                </div>
-            </div>
-
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Unit Price:
-                    <input style="text-align: right" type="text" readonly="readonly" id="txtUnitPrice" value="0.00" name="UnitPrice" class="form-control" />
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Quantity:
-                    <input style="text-align: right" type="text" id="txtQuantity" value="0" name="Quantity" class="form-control" />
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="row">
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Discount:
-                    <input style="text-align: right" type="text" id="txtDiscount" value="0.00" name="Discount" class="form-control" />
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    Total:
-                    <input style="text-align: right" type="text" readonly="readonly" id="txtTotal" value="0.00" name="Total" class="form-control" />
-                </div>
-            </div>
-
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input type="button" style="margin-top:20px" value="Add To List" name="AddToList" id="btnAddToList" class="btn btn-success" />
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-</fieldset>
-
-<br/>
-
-<fieldset>
-    <legend>
-        RESTAURANT LISTED ITEMS
-    </legend>
-    <table style="width:100%" id="tblRestaurantItemList">
-        <thead>
-            <tr>
-                <th hidden>
-                    Item Id
-                </th>
-                <th>
-                    Item Names
-                </th>
-                <th>
-                    Unit Price
-                </th>
-                <th>
-                    Quantity
-                </th>
-                <th>
-                    Discount
-                </th>
-                <th>
-                    Total
-                </th>
-                <th>
-                    Action
-                </th>
-            </tr>
-        </thead>
-    </table>
-</fieldset>
-
-
-<div style="margin-top:20px">
-    <input data-toggle="modal" data-target="#divPayment" style="float:right" type="button" value="CheckOut" name="checkout" id="btnCheckOut" class="btn btn-primary"/> 
-</div>
-
-<div id="divPayment" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Payment</h4>
-            </div>
-
-            <div class="modal-body">
-                <div class="container">
-
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            Payment Total:
-                            <input style="text-align: right" type="text" id="txtPaymentTotal" readonly="readonly" value="0.00" class="form-control" />
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            Payment Amount :
-                            <input style="text-align: right" type="text" id="txtPaymentAmount" value="0.00" class="form-control" />
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Customer :
+                            <input style="text-align: left" type="text" id="txtCustomerName" placeholder="Enter Customer Name" name="CustomerName" class="form-control" />
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            Return Total:
-                            <input style="text-align: right" type="text" id="txtReturnTotal"  value="0.00" class="form-control" />
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Customer Phone Number :
+                            <input style="text-align: left" type="text" id="txtCustomerName" placeholder="Enter Customer Name" name="CustomerName" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Payment Type :
+                            @Html.DropDownList("PaymentType", new SelectList(Model.Item3, "Value", "Text"),
+                            new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-4">
+                            <div class="form-group">
+                                Total :
+                                <input type="text" style="text-align:right" value="0.00" name="FinalTotal" readonly="readonly" id="txtFinalTotal" class="form-control" />
+                            </div>
+                        </div>*@
+
+                </div>
+            </div>
+        </fieldset>
+
+        <br />
+
+        <fieldset style="background-color:silver">
+            <legend style="background-color:#f4511e">
+                RESTAURANT ITEMS
+            </legend>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Item:
+                            @Html.DropDownList("Item", new SelectList(Model.Item2, "Value", "Text"),
+                            new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Unit Price:
+                            <input style="text-align: right" type="text" readonly="readonly" id="txtUnitPrice" value="0.00" name="UnitPrice" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Quantity:
+                            <input style="text-align: right" type="text" id="txtQuantity" value="0" name="Quantity" class="form-control" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Discount: (In ₹)
+                            <input style="text-align: right" type="text" id="txtDiscount" value="0.00" name="Discount" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Item Total:
+                            <input style="text-align: right" type="text" readonly="readonly" id="txtTotal" value="0.00" name="Total" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            Final Total :
+                            <input type="text" style="text-align:right" value="0.00" name="FinalTotal" readonly="readonly" id="txtFinalTotal" class="form-control" />
+                        </div>
+                    </div>
+                    <center>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="button" style="margin-top:20px" value="Add To List" name="AddToList" id="btnAddToList" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </center>
+                </div>
+
+            </div>
+
+        </fieldset>
+
+        <br />
+
+        <fieldset style="background-color:silver">
+            <legend style="background-color:#f4511e"> 
+                RESTAURANT LISTED ITEMS
+            </legend>
+            <table style="width:100%" id="tblRestaurantItemList">
+                <thead>
+                    <tr>
+                        <th hidden>
+                            Item Id
+                        </th>
+                        <th>
+                            Item Names
+                        </th>
+                        <th>
+                            Unit Price
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Discount
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </fieldset>
+
+
+        <div style="margin-top:20px">
+            <input data-backdrop="static" data-keyboard="false"
+                   data-toggle="modal" data-target="#divPayment" style="float:right" type="button" value="CheckOut" name="checkout" id="btnCheckOut" class="btn btn-primary" />
+        </div>
+
+    </div>
+
+
+    <div id="divPayment" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Payment</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                Payment Total:
+                                <input style="text-align: right" type="text" id="txtPaymentTotal" readonly="readonly" value="0.00" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                Payment Amount :
+                                <input style="text-align: right" type="text" id="txtPaymentAmount" value="0.00" class="form-control" />
+                            </div>
                         </div>
 
-                        <div class="form-group col-md-6">
-                            Balance Amount :
-                            <input style="text-align: right" type="text" readonly="readonly"id="txtBalance" value="0.00" class="form-control" />
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                Return Total:
+                                <input style="text-align: right" type="text" id="txtReturnTotal" value="0.00" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                Balance Amount :
+                                <input style="text-align: right" type="text" readonly="readonly" id="txtBalance" value="0.00" class="form-control" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <button class="btn btn-success" id="btnPayment" value="Payment">Payment</button>
-                <button class="btn btn-danger" id="btnClose" data-dismiss="modal" value="close">Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" id="btnPayment" value="Payment">Payment</button>
+                    <button class="btn btn-danger" id="btnClose" data-dismiss="modal" value="close">Close</button>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
-
+</body>
 
 
 

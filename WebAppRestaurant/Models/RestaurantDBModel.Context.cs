@@ -13,10 +13,10 @@ namespace WebAppRestaurant.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class RestaurantDBEntities : DbContext
+    public partial class RestaurantDBEntities3 : DbContext
     {
-        public RestaurantDBEntities()
-            : base("name=RestaurantDBEntities")
+        public RestaurantDBEntities3()
+            : base("name=RestaurantDBEntities3")
         {
         }
     
@@ -26,7 +26,11 @@ namespace WebAppRestaurant.Models
         }
     
         public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<PaymentType> PaymentTypes { get; set; }
+        public virtual DbSet<Register> Registers { get; set; }
+        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
     }
 }

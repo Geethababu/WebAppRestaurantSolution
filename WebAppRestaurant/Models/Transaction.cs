@@ -12,10 +12,12 @@ namespace WebAppRestaurant.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class Transaction
     {
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerPhoneNumber { get; set; }
+        public int TransactionId { get; set; }
+        public int ItemId { get; set; }
+        public decimal Quantity { get; set; }
+        public System.DateTime TransactionDate { get; set; }
+        public int TypeId { get; set; }
     }
 }

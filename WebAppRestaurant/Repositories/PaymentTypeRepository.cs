@@ -9,10 +9,10 @@ namespace WebAppRestaurant.Repositories
 {
     public class PaymentTypeRepository
     {
-        private RestaurantDBEntities objRestaurantDBEntities;
+        private RestaurantDBEntities3 objRestaurantDBEntities;
         public PaymentTypeRepository()
         {
-            objRestaurantDBEntities = new RestaurantDBEntities();
+            objRestaurantDBEntities = new RestaurantDBEntities3();
         }
 
         public IEnumerable<SelectListItem> GetAllPaymentType()

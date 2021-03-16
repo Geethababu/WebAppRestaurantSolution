@@ -5,18 +5,20 @@ using System.Web;
 using System.Web.Mvc;
 using WebAppRestaurant.Models;
 using WebAppRestaurant.Repositories;
+using WebAppRestaurant.ViewModel;
 
 namespace WebAppRestaurant.Controllers
 {
     public class HomeController : Controller
     {
-        private RestaurantDBEntities objRestaurantDBEntities;
-        public HomeController()
+         RestaurantDBEntities3 objRestaurantDBEntities = new RestaurantDBEntities3();
+       /* public HomeController()
         {
-            objRestaurantDBEntities = new RestaurantDBEntities();
-        }
+            objRestaurantDBEntities
+        }*/
         public ActionResult Index()
         {
+
             CustomerRepository objCustomerRepository = new CustomerRepository();
             ItemRepository objItemRepository = new ItemRepository();
             PaymentTypeRepository objPaymentTypeRepository = new PaymentTypeRepository();
@@ -32,6 +34,17 @@ namespace WebAppRestaurant.Controllers
             decimal UnitPrice = objRestaurantDBEntities.Items.Single(model => model.ItemId == itemId).ItemPrice;
             return Json(UnitPrice, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult Index(OrderViewModel objOrderViewModel)
+        {
+            OrderRepository objOrderRepository = new OrderRepository();
+            objOrderRepository.AddOrder(objOrderViewModel);
+            return Json("Your Order has been Successfully Placed", JsonRequestBehavior.AllowGet);
+        }
+
+        
+
 
 
         public ActionResult About()

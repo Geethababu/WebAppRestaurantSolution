@@ -1,0 +1,56 @@
+﻿@model IEnumerable<WebAppRestaurant.Models.Register>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<body style="background-color:bisque ">
+    <center>  
+    <h2> Admin and Super Admin Details </h2>
+
+    <p>
+        <button>      @Html.ActionLink("Create New", "Register", "Admin")  </button>
+</p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.role)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.role)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.UserName }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.UserName }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.UserName })
+                </td>
+            </tr>
+        }
+
+    </table>
+        </center>
+    </body>

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<WebAppRestaurant.Models.Register>
+
+@{
+    ViewBag.Title = "Home_SuperAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <body style="background-color:bisque ">
+    <center>
+        <h2>SuperAdmin Home Page</h2>
+    </center>
+    <center>
+        <table style="border-collapse: separate; border-spacing: 0 15px">
+
+            <tr>
+
+                <td><button> @Html.ActionLink("Add Admin", "Register") </button></td>
+
+            </tr>
+
+            <tr>
+
+                <td><button> @Html.ActionLink("View Admin", "Index", "Registers") </button>  </td>
+
+            </tr>
+
+        </table>
+
+    </center>
+</body>

@@ -9,10 +9,10 @@ namespace WebAppRestaurant.Repositories
 {
     public class CustomerRepository
     {
-        private RestaurantDBEntities objRestaurantDBEntities;
+        private RestaurantDBEntities3 objRestaurantDBEntities;
         public CustomerRepository()
         {
-            objRestaurantDBEntities = new RestaurantDBEntities();
+            objRestaurantDBEntities = new RestaurantDBEntities3();
         }
 
         public IEnumerable<SelectListItem> GetAllCustomers()
